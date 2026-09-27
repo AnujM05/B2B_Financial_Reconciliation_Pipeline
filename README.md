@@ -45,3 +45,22 @@ I connected Power BI directly to the PostgreSQL warehouse to build an automated 
 
 ## 🚀 Business Impact
 This pipeline successfully processed a ₹2.73M ledger, securely matched ₹2.43M in revenue, and precisely isolated ₹300K in missing invoices and ₹94K in unallocated rogue bank deposits. It transforms a manual, error-prone accounting chore into an automated, zero-loss financial reconciliation engine.
+
+## 💼 Financial Mechanics & Operational Handoff
+To bridge the gap between data engineering and business operations, this pipeline is designed around the standard B2B "Order-to-Cash" cycle. 
+
+### 1. The Business Context
+In B2B commerce, clients (e.g., Enterprise Corporations) are billed via legal Invoices after services are rendered. They are required to transfer funds to our corporate bank account within a strict time window, as B2B payment terms commonly run Net 30 to Net 90 days. This dashboard tracks that exact cash movement and settlement.
+
+### 2. The Metrics Translated
+* **Amount Billed (₹27.32 Lakhs):** The total expected revenue based on internal sales invoices.
+* **Matched / Settled Cash (₹24.3 Lakhs):** The success metric. This cash has physically cleared the bank and our algorithm has successfully linked it to the exact client and invoice.
+* **Algorithm Filters:** Matches are achieved either via **Exact Match** (flawless bank data) or **Fuzzy Match** (utilizing `RapidFuzz` string similarity to bypass messy, abbreviated banking data).
+* **Missing Revenue (₹300k):** Known unpaid debt. The client was billed, but the bank has not received the funds.
+* **Unallocated Cash (₹94k):** Mystery bank deposits. Funds have cleared our bank, but cannot be tied to a known invoice, preventing legal revenue recognition.
+
+### 3. Departmental Workflow (The Handoff)
+This automated pipeline delegates specific insights to the appropriate finance teams:
+* **The Finance Director:** Utilizes the dashboard as a daily command center to monitor working capital and order-to-cash efficiency.
+* **Accounts Receivable (Cash Application):** Takes ownership of the **Unallocated Cash (₹94k)**, acting as financial detectives to categorize mystery deposits and legally record them as revenue. 
+* **The Collections Team:** Takes ownership of the **Missing Revenue (₹300k)**. Because it is up to the AR and collections teams to make sure payment is collected, they utilize the SQL-generated hit-list to aggressively pursue delinquent clients and enforce credit terms.
